@@ -284,7 +284,7 @@ public class KillAuraMod extends Module {
             case "Smooth":
                 double deltaYaw = MathHelper.wrapAngleTo180_float(targetRotation.getYaw() - prevRotation.getYaw());
                 double deltaPitch = targetRotation.getPitch() - prevRotation.getPitch();
-                double smoothValue = MathUtil.randomNoise(this.smoothValue.getFirst(), this.smoothValue.getSecond());
+                double smoothValue = MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());
                 float smoothYaw = (float) (deltaYaw * smoothValue);
                 float smoothPitch =(float) (deltaPitch * smoothValue);
 
