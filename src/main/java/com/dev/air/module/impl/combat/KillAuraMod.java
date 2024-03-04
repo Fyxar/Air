@@ -46,7 +46,7 @@ public class KillAuraMod extends Module {
     private final NumberValue hurtTime = new NumberValue("Hurt Time", 10, 1, 1, 10);
     private final ModeValue timingMode = new ModeValue("Timing", "Off", "Off", "Polar");
     private final ModeValue autoBlock = new ModeValue("Auto Block", "Off", "Off", "Fake");
-    private final ModeValue rotationMode = new ModeValue("Rotation", "Smooth", "Normal", "Smooth", "Distance");
+    private final ModeValue rotationMode = new ModeValue("Rotation", "Smooth", "Normal", "Smooth");
     private final RangeValue smoothValue = new RangeValue("Smooth Value", 0.4,  0.6, 0.1, 0.1, 1).requires(rotationMode, "Smooth");
     private final ModeValue randomization = new ModeValue("Randomise (rot)", "Noise", "None", "Simple", "Noise", "Time");
     private final RangeValue randomiseValue = new RangeValue("Randomise Value", 0,  20, 1, 0, 30).requires(randomization,
@@ -284,7 +284,7 @@ public class KillAuraMod extends Module {
             case "Smooth":
                 double deltaYaw = MathHelper.wrapAngleTo180_float(targetRotation.getYaw() - prevRotation.getYaw());
                 double deltaPitch = targetRotation.getPitch() - prevRotation.getPitch();
-                double smoothValue = MathUtil.randomNoise(this.smoothValue.getFirst(), this.smoothValue.getSecond());
+                double smoothValue = MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());
                 float smoothYaw = (float) (deltaYaw * smoothValue);
                 float smoothPitch =(float) (deltaPitch * smoothValue);
 

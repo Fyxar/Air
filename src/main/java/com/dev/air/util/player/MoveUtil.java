@@ -1,11 +1,20 @@
 package com.dev.air.util.player;
 
 import com.dev.air.event.impl.tick.movement.MoveInputEvent;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
 
 import static com.dev.air.util.MinecraftInstance.*;
 
 public class MoveUtil {
+
+    public static float getSpeed(double speed) {
+        if (mc.player.isPotionActive(Potion.moveSpeed)) {
+            speed += (mc.player.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1) * 0.1F;
+        }
+
+        return (float) speed;
+    }
 
     public static boolean isMoving() {
         return mc.player.movementInput.moveForward != 0 || mc.player.movementInput.moveStrafe != 0;

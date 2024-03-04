@@ -9,6 +9,7 @@ import com.dev.air.module.impl.exploit.*;
 import com.dev.air.module.impl.movement.*;
 import com.dev.air.module.impl.other.TestMod;
 import com.dev.air.module.impl.render.*;
+import com.dev.air.module.impl.world.ScaffoldMod;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,9 @@ public class ModuleManager extends ArrayList<Module> {
         this.add(new ArraylistMod());
         this.add(new ClickUIMod());
         this.add(new AnimationsMod());
+
+        /* World */
+        this.add(new ScaffoldMod());
 
         /* Exploit */
         this.add(new DisablerMod());

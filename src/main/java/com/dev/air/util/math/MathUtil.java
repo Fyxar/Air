@@ -18,11 +18,11 @@ public class MathUtil {
     }
 
     public static double randomNoise(double min, double max) {
-        FastNoiseLite perlinNoise = new FastNoiseLite((int) System.currentTimeMillis());
+        FastNoiseLite perlinNoise = new FastNoiseLite((int) randomNormal(0, 10000));
         perlinNoise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
 
-        float perlinValue = perlinNoise.GetNoise((float) MinecraftInstance.mc.player.posX + (float) Math.random(),
-                (float) MinecraftInstance.mc.player.posZ + (float) Math.random());
+        float perlinValue = perlinNoise.GetNoise((float) randomNormal(0, 10000),
+                (float) randomNormal(0, 10000) + (float) Math.random());
         return map(perlinValue, -1.0f, 1.0f, (float) min, (float) max);
     }
 
