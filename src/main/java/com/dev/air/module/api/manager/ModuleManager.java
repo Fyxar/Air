@@ -29,6 +29,7 @@ public class ModuleManager extends ArrayList<Module> {
         this.add(new SpeedMod());
         this.add(new JesusMod());
         this.add(new FlightMod());
+        this.add(new SprintMod());
 
         /* Render */
         this.add(new ArraylistMod());
