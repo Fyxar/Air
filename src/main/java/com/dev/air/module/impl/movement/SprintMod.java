@@ -17,6 +17,6 @@ public class SprintMod extends Module {
     @Override
     public void onDisable() {
         mc.gameSettings.keyBindSprint.setPressed(false);
-        super.onDisable();
     }
+    
 }
