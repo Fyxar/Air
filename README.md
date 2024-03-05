@@ -26,3 +26,6 @@ We appreciate contributions. So if you want to support us, feel free to make cha
 ## Configuration ⚙️
 
 Sadly, air don't really have a config system yet so you will have to manually do it each time.
+
+## Credits
+Font Renderer: https://github.com/Godwhitelight/FontRenderer
