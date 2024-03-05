@@ -110,4 +110,10 @@ public class Vec3i implements Comparable<Vec3i> {
     public String toString() {
         return Objects.toStringHelper(this).add("x", this.getX()).add("y", this.getY()).add("z", this.getZ()).toString();
     }
+
+
+    public Vec3 multiply(double v) {
+        return new Vec3(this.x * v, this.y * v, this.z * v);
+    }
+    
 }
