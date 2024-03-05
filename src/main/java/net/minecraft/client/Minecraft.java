@@ -516,9 +516,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         Client.instance.init();
 
         if (this.serverName != null) {
-            this.displayGuiScreen(new Connecting(new MainMenu(), this, this.serverName, this.serverPort));
+            this.displayGuiScreen(new Connecting(new MainMenuScreen(), this, this.serverName, this.serverPort));
         } else {
-            this.displayGuiScreen(new MainMenu());
+            this.displayGuiScreen(new MainMenuScreen());
         }
 
         this.renderEngine.deleteTexture(this.mojangLogo);
@@ -858,12 +858,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         }
 
         if (screenIn == null && this.world == null) {
-            screenIn = new MainMenu();
+            screenIn = new MainMenuScreen();
         } else if (screenIn == null && this.player.getHealth() <= 0.0F) {
             screenIn = new GameOver();
         }
 
-        if (screenIn instanceof MainMenu) {
+        if (screenIn instanceof MainMenuScreen) {
             this.gameSettings.showDebugInfo = false;
             this.ingameGUI.getChatGUI().clearChatMessages();
         }

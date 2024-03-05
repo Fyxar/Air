@@ -59,7 +59,7 @@ public class GameOver extends Screen implements GuiYesNoCallback {
 
             case 1:
                 if (this.mc.world.getWorldInfo().isHardcoreModeEnabled()) {
-                    this.mc.displayGuiScreen(new MainMenu());
+                    this.mc.displayGuiScreen(new MainMenuScreen());
                 } else {
                     YesNo guiyesno = new YesNo(this, I18n.format("deathScreen.quit.confirm"), "", I18n.format("deathScreen.titleScreen"), I18n.format("deathScreen.respawn"), 0);
                     this.mc.displayGuiScreen(guiyesno);
@@ -72,7 +72,7 @@ public class GameOver extends Screen implements GuiYesNoCallback {
         if (result) {
             this.mc.world.sendQuittingDisconnectingPacket();
             this.mc.loadWorld(null);
-            this.mc.displayGuiScreen(new MainMenu());
+            this.mc.displayGuiScreen(new MainMenuScreen());
         } else {
             this.mc.player.respawnPlayer();
             this.mc.displayGuiScreen(null);

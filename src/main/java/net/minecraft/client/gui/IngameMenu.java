@@ -51,9 +51,9 @@ public class IngameMenu extends Screen {
                 this.mc.loadWorld(null);
 
                 if (flag) {
-                    this.mc.displayGuiScreen(new MainMenu());
+                    this.mc.displayGuiScreen(new MainMenuScreen());
                 } else {
-                    this.mc.displayGuiScreen(new MultiplayerScreen(new MainMenu()));
+                    this.mc.displayGuiScreen(new MultiplayerScreen(new MainMenuScreen()));
                 }
 
             case 2:

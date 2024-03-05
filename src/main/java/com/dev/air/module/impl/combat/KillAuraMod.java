@@ -48,9 +48,9 @@ public class KillAuraMod extends Module {
     private final ModeValue autoBlock = new ModeValue("Auto Block", "Off", "Off", "Fake");
     private final ModeValue rotationMode = new ModeValue("Rotation", "Smooth", "Normal", "Smooth");
     private final RangeValue smoothValue = new RangeValue("Smooth Value", 0.4,  0.6, 0.1, 0.1, 1).requires(rotationMode, "Smooth");
-    private final ModeValue randomization = new ModeValue("Randomise (rot)", "Noise", "None", "Simple", "Noise", "Time");
+    private final ModeValue randomization = new ModeValue("Randomise (rot)", "Simple", "None", "Simple", "Time");
     private final RangeValue randomiseValue = new RangeValue("Randomise Value", 0,  20, 1, 0, 30).requires(randomization,
-            "Noise", "Time");
+            "Time");
     private final ModeValue pitchAim = new ModeValue("Pitch Aim", "Head", "Body", "Switch", "Head", "Random");
     private final ModeValue cpsMode = new ModeValue("CPS Mode", "Gaussian", "Randomization", "Gaussian", "1.9");
     private final RangeValue cps = new RangeValue("CPS", 12, 15, 1, 1, 30).requires(cpsMode, "Randomization");
@@ -264,13 +264,6 @@ public class KillAuraMod extends Module {
             if (randomization.is("Simple")) {
                 targetRotation.setYaw(targetRotation.getYaw() + (float) Math.random());
                 targetRotation.setPitch(targetRotation.getPitch() + (float) Math.random());
-            }
-
-            if (randomization.is("Noise")) {
-                double randomYaw = MathUtil.randomNoise(randomiseValue.getFirst(), randomiseValue.getSecond()), randomPitch = MathUtil.randomNoise(randomiseValue.getFirst(), randomiseValue.getSecond());
-                System.out.println(randomYaw + "," + randomPitch);
-                targetRotation.setYaw(targetRotation.getYaw() + (float) randomYaw);
-                targetRotation.setPitch(targetRotation.getPitch() + (float) randomPitch);
             }
 
             if (randomization.is("Time")) {

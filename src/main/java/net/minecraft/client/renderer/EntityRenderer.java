@@ -3,7 +3,6 @@ package net.minecraft.client.renderer;
 import com.dev.air.event.impl.render.RayCastEvent;
 import com.dev.air.event.impl.render.Render3DEvent;
 import com.dev.air.util.rotation.other.Rotation;
-import com.dev.air.viamcp.util.VersionUtil;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.gson.JsonSyntaxException;
@@ -2239,8 +2238,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             }
         }
 
-        if (this.mc.currentScreen instanceof MainMenu) {
-            this.updateMainMenu((MainMenu) this.mc.currentScreen);
+        if (this.mc.currentScreen instanceof MainMenuScreen) {
+            this.updateMainMenu((MainMenuScreen) this.mc.currentScreen);
         }
 
         if (this.updatedWorld != world) {
@@ -2272,7 +2271,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         }
     }
 
-    private void updateMainMenu(MainMenu p_updateMainMenu_1_) {
+    private void updateMainMenu(MainMenuScreen p_updateMainMenu_1_) {
         try {
             String s = null;
             Calendar calendar = Calendar.getInstance();

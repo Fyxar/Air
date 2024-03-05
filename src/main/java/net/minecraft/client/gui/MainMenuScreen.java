@@ -1,5 +1,6 @@
 package net.minecraft.client.gui;
 
+import com.dev.air.ui.altmanager.AltManagerScreen;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MainMenu extends Screen implements GuiYesNoCallback {
+public class MainMenuScreen extends Screen implements GuiYesNoCallback {
     private static final AtomicInteger field_175373_f = new AtomicInteger(0);
     private static final Logger logger = LogManager.getLogger();
     private static final Random RANDOM = new Random();
@@ -91,7 +92,7 @@ public class MainMenu extends Screen implements GuiYesNoCallback {
     private int field_92019_w;
     private ResourceLocation backgroundTexture;
 
-    public MainMenu() {
+    public MainMenuScreen() {
         this.openGLWarning2 = field_96138_a;
         this.splashText = "missingno";
         BufferedReader bufferedreader = null;
@@ -209,10 +210,7 @@ public class MainMenu extends Screen implements GuiYesNoCallback {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_, I18n.format("menu.multiplayer")));
 
-        GuiButton missingRealmsButton = new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, "Where's Realms?");
-        missingRealmsButton.enabled = false;
-
-        this.buttonList.add(missingRealmsButton);
+        this.buttonList.add(new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, "Alt Manager"));
     }
 
     /**
@@ -256,6 +254,10 @@ public class MainMenu extends Screen implements GuiYesNoCallback {
 
         if (button.id == 11) {
             this.mc.launchIntegratedServer("Demo_World", "Demo_World", DemoWorldServer.demoWorldSettings);
+        }
+
+        if (button.id == 14) {
+            this.mc.displayGuiScreen(new AltManagerScreen());
         }
 
         if (button.id == 12) {

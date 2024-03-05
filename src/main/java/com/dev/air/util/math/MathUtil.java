@@ -27,7 +27,7 @@ public class MathUtil {
     }
 
     public static double randomLast(double min, double max, long last) {
-        long timeDifference = System.currentTimeMillis() - last;
+        long timeDifference = (long) ((System.currentTimeMillis() - last) + randomNormal(1, 10));
         return (timeDifference % (max - min + 1)) + min;
     }
 

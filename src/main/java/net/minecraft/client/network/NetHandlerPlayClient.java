@@ -555,7 +555,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
         if (this.screenServer != null) {
             this.gameController.displayGuiScreen(new Disconnected(this.screenServer, "disconnect.lost", reason));
         } else {
-            this.gameController.displayGuiScreen(new Disconnected(new MultiplayerScreen(new MainMenu()), "disconnect.lost", reason));
+            this.gameController.displayGuiScreen(new Disconnected(new MultiplayerScreen(new MainMenuScreen()), "disconnect.lost", reason));
         }
     }
 

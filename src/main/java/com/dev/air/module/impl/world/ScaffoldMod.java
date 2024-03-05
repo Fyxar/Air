@@ -46,9 +46,9 @@ public class ScaffoldMod extends Module {
     private final ModeValue rotationMode = new ModeValue("Rotation Mode", "Smooth", "Normal", "Smooth", "1.17 Snap");
     private final ModeValue rotationType = new ModeValue("Rotation Type", "Center", "Center", "Simple");
     private final RangeValue smoothValue = new RangeValue("Smooth Value", 0.4,  0.6, 0.1, 0.1, 1).requires(rotationMode, "Smooth");
-    private final ModeValue randomization = new ModeValue("Randomise (rot)", "Noise", "None", "Simple", "Noise");
+    private final ModeValue randomization = new ModeValue("Randomise (rot)", "Simple", "None", "Simple");
     private final RangeValue randomiseValue = new RangeValue("Randomise Value", 0,  20, 1, 0, 30).requires(randomization,
-            "Noise", "Time");
+            "Time");
     private final NumberValue delayValue = new NumberValue("Delay Value", 0, 1, 1, 5000);
     private final BooleanValue sameY = new BooleanValue("Same Y", false);
     private final BooleanValue swing = new BooleanValue("Swing", false);
@@ -249,12 +249,6 @@ public class ScaffoldMod extends Module {
             if (randomization.is("Simple")) {
                 targetRotation.setYaw(targetRotation.getYaw() + (float) Math.random());
                 targetRotation.setPitch(targetRotation.getPitch() + (float) Math.random());
-            }
-
-            if (randomization.is("Noise")) {
-                double randomYaw = MathUtil.randomNoise(randomiseValue.getFirst(), randomiseValue.getSecond()), randomPitch = MathUtil.randomNoise(randomiseValue.getFirst(), randomiseValue.getSecond());
-                targetRotation.setYaw(targetRotation.getYaw() + (float) randomYaw);
-                targetRotation.setPitch(targetRotation.getPitch() + (float) randomPitch);
             }
         }
 

@@ -7,7 +7,8 @@ import com.dev.air.module.api.annotation.Development;
 import com.dev.air.module.impl.combat.*;
 import com.dev.air.module.impl.exploit.*;
 import com.dev.air.module.impl.movement.*;
-import com.dev.air.module.impl.other.TestMod;
+import com.dev.air.module.impl.test.FontTestMod;
+import com.dev.air.module.impl.test.TestMod;
 import com.dev.air.module.impl.render.*;
 import com.dev.air.module.impl.world.ScaffoldMod;
 
@@ -35,6 +36,8 @@ public class ModuleManager extends ArrayList<Module> {
         this.add(new ArraylistMod());
         this.add(new ClickUIMod());
         this.add(new AnimationsMod());
+        this.add(new WatermarkMod());
+        this.add(new TargetHUDMod());
 
         /* World */
         this.add(new ScaffoldMod());
@@ -46,6 +49,7 @@ public class ModuleManager extends ArrayList<Module> {
 
         /* Testing */
         this.add(new TestMod());
+        this.add(new FontTestMod());
     }
 
     @Override
