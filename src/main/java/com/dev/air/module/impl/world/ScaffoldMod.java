@@ -99,6 +99,9 @@ public class ScaffoldMod extends Module {
             mc.player.motionX *= 0.98F;
             mc.player.motionZ *= 0.98F;
         }
+
+        if (rotationMode.is("1.17 Snap"))
+            PacketUtil.sendNo(new C03PacketPlayer.C06PacketPlayerPosLook(mc.player.posX, mc.player.posY, mc.player.posZ, mc.player.rotationYaw, mc.player.rotationPitch, mc.player.onGround));
     }
 
 
