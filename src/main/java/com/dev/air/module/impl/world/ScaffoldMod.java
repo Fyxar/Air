@@ -12,6 +12,7 @@ import com.dev.air.event.impl.update.PreUpdateEvent;
 import com.dev.air.module.api.Category;
 import com.dev.air.module.api.Module;
 import com.dev.air.module.api.annotation.ModuleInfo;
+import com.dev.air.rotation.RotationManager;
 import com.dev.air.util.math.MathUtil;
 import com.dev.air.util.other.Stopwatch;
 import com.dev.air.util.packet.PacketUtil;
@@ -57,7 +58,6 @@ public class ScaffoldMod extends Module {
 
     private BlockUtil.BlockData blockData;
     private Stopwatch stopwatch = new Stopwatch();
-    private Rotation prevRotation, rotation;
     private int lastSlot, playerY;
 
 
@@ -122,42 +122,6 @@ public class ScaffoldMod extends Module {
     }
 
     @Target
-    public void onPlayerStrafe(PlayerStrafeEvent event) {
-        if (rotation != null && fixVelocity.isEnabled()) {
-            event.setYaw(rotation.getYaw());
-        }
-    }
-
-    @Target
-    public void onPlayerJump(PlayerJumpEvent event) {
-        if (rotation != null && fixVelocity.isEnabled()) {
-            event.setYaw(rotation.getYaw());
-        }
-    }
-
-    @Target
-    public void onMoveInput(MoveInputEvent event) {
-        if (rotation != null && fixVelocity.isEnabled()) {
-            MoveUtil.correctInput(event, rotation.getYaw());
-        }
-    }
-
-    @Target
-    public void onPreMotion(PreMotionEvent event) {
-        if (rotation == null) {
-            prevRotation = new Rotation(event.getYaw(), event.getPitch());
-            return;
-        }
-
-        event.setYaw(rotation.getYaw());
-        event.setPitch(rotation.getPitch());
-        mc.player.renderYawOffset = mc.player.renderYawHead = rotation.getYaw();
-        mc.player.renderPitchHead = rotation.getPitch();
-
-        prevRotation = new Rotation(event.getYaw(), event.getPitch());
-    }
-
-    @Target
     public void onPacketSend(PacketSendEvent event) {
         if(pick.is("Spoof") && event.getPacket() instanceof C09PacketHeldItemChange) {
             C09PacketHeldItemChange wrapper = (C09PacketHeldItemChange) event.getPacket();
@@ -207,7 +171,6 @@ public class ScaffoldMod extends Module {
         Rotation targetRotation = RotationUtil.calculateRotationTo(hitVec);
         if (rotationMode.is("1.17 Snap")) {
             PacketUtil.sendNo(new C03PacketPlayer.C06PacketPlayerPosLook(mc.player.posX, mc.player.posY, mc.player.posZ, targetRotation.getYaw(), targetRotation.getPitch(), mc.player.onGround));
-            rotation = null;
             return;
         }
 
@@ -235,41 +198,31 @@ public class ScaffoldMod extends Module {
         }
 
         targetRotation.setPitch(81);
-        if (prevRotation == null) prevRotation = new Rotation(mc.player.rotationYaw, mc.player.rotationPitch);
-
         updateRotation(targetRotation);
     }
 
     private void updateRotation(Rotation targetRotation) {
-        Rotation cacheRotation = null;
-        /* default randomization */
-        if (mc.player.ticksExisted % 5 == 0 && MoveUtil.isMoving()) {
+        if (mc.player.ticksExisted % 5 == 0) {
             targetRotation.setPitch(targetRotation.getPitch() + (float) MathUtil.randomNormal(-5, 5));
 
             if (randomization.is("Simple")) {
                 targetRotation.setYaw(targetRotation.getYaw() + (float) Math.random());
                 targetRotation.setPitch(targetRotation.getPitch() + (float) Math.random());
             }
+
+            if (randomization.is("Time")) {
+                double randomYaw = MathUtil.randomLast(randomiseValue.getFirst(), randomiseValue.getSecond(), System.currentTimeMillis() + (long) MathUtil.randomNormal(0, 100000)), randomPitch = MathUtil.randomLast(randomiseValue.getFirst(), randomiseValue.getSecond(), System.currentTimeMillis() + (long) MathUtil.randomNormal(0, 100000));
+                targetRotation.setYaw(targetRotation.getYaw() + (float) randomYaw);
+                targetRotation.setPitch(targetRotation.getPitch() + (float) randomPitch);
+            }
         }
 
-        switch (rotationMode.getMode()) {
-            case "Smooth":
-                double deltaYaw = MathHelper.wrapAngleTo180_float(targetRotation.getYaw() - prevRotation.getYaw());
-                double deltaPitch = targetRotation.getPitch() - prevRotation.getPitch();
-                double smoothValue = MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());
-                float smoothYaw = (float) (deltaYaw * smoothValue);
-                float smoothPitch =(float) (deltaPitch * smoothValue);
-
-                cacheRotation = new Rotation(prevRotation.getYaw() + smoothYaw, prevRotation.getPitch() + smoothPitch);
-                break;
-
-            case "Normal":
-                cacheRotation = targetRotation;
-                break;
+        double turnSpeed = 1.0F;
+        if (rotationMode.is("Smooth")) {
+            turnSpeed = MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());;
         }
 
-        if (cacheRotation != null)
-            rotation = RotationUtil.patchGCD(prevRotation, cacheRotation);
+        RotationManager.rotateTo(targetRotation, turnSpeed, fixVelocity.isEnabled());
     }
 
 }

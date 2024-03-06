@@ -11,6 +11,7 @@ import com.dev.air.event.impl.update.PreUpdateEvent;
 import com.dev.air.module.api.Category;
 import com.dev.air.module.api.Module;
 import com.dev.air.module.api.annotation.ModuleInfo;
+import com.dev.air.rotation.RotationManager;
 import com.dev.air.util.player.MoveUtil;
 import com.dev.air.util.rotation.other.Rotation;
 import com.dev.air.util.math.MathUtil;
@@ -44,7 +45,6 @@ public class KillAuraMod extends Module {
     private final ModeValue filterMode = new ModeValue("Priority", "Health", "Distance", "Health");
     private final NumberValue range = new NumberValue("Range", 3.1, 0.1, 1.0, 6.0);
     private final NumberValue hurtTime = new NumberValue("Hurt Time", 10, 1, 1, 10);
-    private final ModeValue timingMode = new ModeValue("Timing", "Off", "Off", "Polar");
     private final ModeValue autoBlock = new ModeValue("Auto Block", "Off", "Off", "Fake");
     private final ModeValue rotationMode = new ModeValue("Rotation", "Smooth", "Normal", "Smooth");
     private final RangeValue smoothValue = new RangeValue("Smooth Value", 0.4,  0.6, 0.1, 0.1, 1).requires(rotationMode, "Smooth");
@@ -64,9 +64,6 @@ public class KillAuraMod extends Module {
     private long clickDelay;
     private EntityLivingBase target;
     private Stopwatch stopwatch = new Stopwatch();
-    private Rotation prevRotation, rotation;
-    private int waitForTick;
-    private double lastRandomPitch;
     private boolean last;
     private long lastAttackMS;
 
@@ -76,16 +73,8 @@ public class KillAuraMod extends Module {
     }
 
     @Override
-    public void onDisable() {
-        prevRotation = null;
-        rotation = null;
-        waitForTick = 0;
-    }
-
-    @Override
     public void onEnable() {
         lastAttackMS = System.currentTimeMillis();
-        lastRandomPitch = 0;
     }
 
     @Target
@@ -112,78 +101,6 @@ public class KillAuraMod extends Module {
     }
 
     @Target
-    public void onPreMotion(PreMotionEvent event) {
-        if (rotation == null) {
-            prevRotation = new Rotation(event.getYaw(), event.getPitch());
-            return;
-        }
-
-        if (waitForTick == 0) {
-            event.setYaw(rotation.getYaw());
-            event.setPitch(rotation.getPitch());
-            mc.player.renderYawOffset = mc.player.renderYawHead = rotation.getYaw();
-            mc.player.renderPitchHead = rotation.getPitch();
-        }
-
-        /* slowly rotate back? */
-        if (!canAttack(target) && waitForTick == 0) {
-            double distanceYaw = Math.abs(MathHelper.wrapAngleTo180_float(mc.player.rotationYaw) - MathHelper.wrapAngleTo180_float(rotation.getYaw()));
-            double distancePitch = Math.abs(mc.player.rotationPitch - rotation.getPitch());
-
-            if (distanceYaw <= 2 && distancePitch <= 2) {
-                waitForTick = 1;
-                return;
-            }
-        }
-
-        if (waitForTick == 1) {
-            waitForTick = 2;
-        }
-
-        prevRotation = new Rotation(event.getYaw(), event.getPitch());
-    }
-
-    @Target
-    public void onRayCast(RayCastEvent event) {
-        if (rotation != null) {
-            event.setRotation(rotation);
-        }
-
-        if (canAttack(target) && event.getType() == RayCastEvent.RayCastType.ENTITY) {
-            event.setReach(range.getFloat());
-        }
-    }
-
-    @Target
-    public void onPlayerStrafe(PlayerStrafeEvent event) {
-        if (rotation != null && fixVelocity.isEnabled()) {
-            event.setYaw(rotation.getYaw());
-        }
-    }
-
-    @Target
-    public void onPlayerJump(PlayerJumpEvent event) {
-        if (rotation != null && fixVelocity.isEnabled()) {
-            event.setYaw(rotation.getYaw());
-        }
-    }
-
-    @Target
-    public void onMoveInput(MoveInputEvent event) {
-        if (rotation != null && fixVelocity.isEnabled()) {
-            MoveUtil.correctInput(event, rotation.getYaw());
-        }
-    }
-
-    @Target
-    public void onPostMotion(PostMotionEvent event) {
-        if (waitForTick == 2) {
-            waitForTick = 0;
-            rotation = null;
-        }
-    }
-
-    @Target
     public void onItemRenderer(ItemRendererEvent event) {
         if (autoBlock.is("Fake") && canFakeBlock()) {
             event.setAction(EnumAction.BLOCK);
@@ -198,13 +115,12 @@ public class KillAuraMod extends Module {
     public void attack(EntityLivingBase entity) {
         if (!canAttack(target)) return;
         if (!isRayCastHit()) return;
-        if (!checkTiming()) return;
 
         mc.player.swingItem();
         if (failRate.getFloat() >= Math.random()) return;
 
         if (keepSprint.isEnabled()) {
-            PacketUtil.sendNo(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
+            PacketUtil.send(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
             mc.player.resetCooldown();
         }
         else mc.playerController.attackEntity(mc.player, entity);
@@ -222,26 +138,15 @@ public class KillAuraMod extends Module {
         return true;
     }
 
-    public boolean checkTiming() {
-        if (timingMode.is("Polar")) {
-            if (!mc.player.onGround && mc.player.motionY > 0.3 && mc.player.fallDistance > 1) return false;
-            if (Math.abs(MathHelper.wrapAngleTo180_float(prevRotation.getYaw() - rotation.getYaw())) >= 160) return false;
-        }
-
-        return true;
-    }
-
     public boolean isRayCastHit() {
-        if (rotation != null && rayCast.isEnabled() &&
-                RayCastUtil.rayCastEntity(range.getFloat(), rotation.getYaw(), rotation.getPitch()) != target) return false;
+        if (RotationManager.getRotation() != null && rayCast.isEnabled() &&
+                RayCastUtil.rayCastEntity(range.getFloat(), RotationManager.getRotation().getYaw(), RotationManager.getRotation().getPitch()) != target) return false;
 
         return true;
     }
 
     private void updateRotation() {
-        if (prevRotation == null) prevRotation = new Rotation(mc.player.rotationYaw, mc.player.rotationPitch);
         if (!canAttack(target)) {
-            if (rotation != null) updateRotation(new Rotation(mc.player.rotationYaw, mc.player.rotationPitch));
             return;
         }
 
@@ -252,12 +157,9 @@ public class KillAuraMod extends Module {
         if (pitchAim.is("Switch") && mc.player.ticksExisted % (int) MathUtil.randomNormal(5, 30) == 0D) last = !last;
 
         updateRotation(targetRotation);
-        waitForTick = 0;
     }
 
     private void updateRotation(Rotation targetRotation) {
-        Rotation cacheRotation = null;
-        /* default randomization */
         if (mc.player.ticksExisted % 5 == 0 && canAttack(target)) {
             targetRotation.setPitch(targetRotation.getPitch() + (float) MathUtil.randomNormal(-5, 5));
 
@@ -273,24 +175,12 @@ public class KillAuraMod extends Module {
             }
         }
 
-        switch (rotationMode.getMode()) {
-            case "Smooth":
-                double deltaYaw = MathHelper.wrapAngleTo180_float(targetRotation.getYaw() - prevRotation.getYaw());
-                double deltaPitch = targetRotation.getPitch() - prevRotation.getPitch();
-                double smoothValue = MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());
-                float smoothYaw = (float) (deltaYaw * smoothValue);
-                float smoothPitch =(float) (deltaPitch * smoothValue);
-
-                cacheRotation = new Rotation(prevRotation.getYaw() + smoothYaw, prevRotation.getPitch() + smoothPitch);
-                break;
-
-            case "Normal":
-                cacheRotation = targetRotation;
-                break;
+        double turnSpeed = 1.0F;
+        if (rotationMode.is("Smooth")) {
+            turnSpeed = MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());;
         }
 
-        if (cacheRotation != null)
-            rotation = RotationUtil.patchGCD(prevRotation, cacheRotation);
+        RotationManager.rotateTo(targetRotation, turnSpeed, fixVelocity.isEnabled());
     }
 
     private Comparator<EntityLivingBase> sort() {

@@ -7,7 +7,9 @@ import com.dev.air.event.impl.packet.PacketSendEvent;
 import com.dev.air.imgui.ImGuiImpl;
 import com.dev.air.module.api.manager.ModuleManager;
 import com.dev.air.module.impl.movement.FlightMod;
+import com.dev.air.rotation.RotationManager;
 import com.dev.air.ui.clickgui.imgui.ImGuiClickUiScreen;
+import com.dev.air.util.MinecraftInstance;
 import com.dev.air.viamcp.handlers.AdditionPacketHandler;
 import com.dev.air.viamcp.handlers.CooldownHandler;
 import com.dev.air.viamcp.handlers.ViaPacketTranslator;
@@ -47,6 +49,8 @@ public enum Client {
         EventManager.register(new AdditionPacketHandler());
         EventManager.register(new ViaPacketTranslator());
         EventManager.register(new CooldownHandler());
+
+        EventManager.register(new RotationManager());
     }
 
     private void setupViaMCP() {

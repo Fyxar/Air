@@ -6,6 +6,10 @@ import static com.dev.air.util.MinecraftInstance.*;
 
 public class PacketUtil {
 
+    public static void send(final Packet<?> packet) {
+        mc.getNetHandler().addToSendQueue(packet);
+    }
+
     public static void sendNo(final Packet<?> packet) {
         mc.getNetHandler().getNetworkManager().sendNo(packet);
     }

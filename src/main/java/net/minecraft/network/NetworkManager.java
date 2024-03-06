@@ -200,20 +200,14 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
     }
 
     public void sendPacket(Packet packetIn, GenericFutureListener<? extends Future<? super Void>> listener, GenericFutureListener<? extends Future<? super Void>>... listeners) {
-        PacketSendEvent event = new PacketSendEvent(packetIn);
-        EventManager.call(event);
-
-        if (NewPacketHandler.handlePacket(packetIn)) return;
-        if (event.isCancelled()) return;
-
         if (this.isChannelOpen()) {
             this.flushOutboundQueue();
-            this.dispatchPacket(event.getPacket(), ArrayUtils.add(listeners, 0, listener));
+            this.dispatchPacket(packetIn, ArrayUtils.add(listeners, 0, listener));
         } else {
             this.readWriteLock.writeLock().lock();
 
             try {
-                this.outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(event.getPacket(), ArrayUtils.add(listeners, 0, listener)));
+                this.outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(packetIn, ArrayUtils.add(listeners, 0, listener)));
             } finally {
                 this.readWriteLock.writeLock().unlock();
             }

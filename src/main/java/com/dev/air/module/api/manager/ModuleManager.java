@@ -23,6 +23,7 @@ public class ModuleManager extends ArrayList<Module> {
         this.add(new KillAuraMod());
         this.add(new VelocityMod());
         //this.add(new TickBaseMod());
+        this.add(new CriticalsMod());
         this.add(new BackTrackMod());
 
         /* Movement */
