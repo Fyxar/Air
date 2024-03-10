@@ -1,6 +1,5 @@
 package net.minecraft.entity;
 
-import com.dev.air.event.impl.render.RayCastEvent;
 import com.dev.air.event.impl.tick.movement.PlayerStrafeEvent;
 import com.dev.air.util.MinecraftInstance;
 import com.dev.air.util.rotation.other.Rotation;
@@ -1332,12 +1331,9 @@ public abstract class Entity implements ICommandSender {
 
     public MovingObjectPosition rayTrace(double blockReachDistance, float partialTicks) {
         if (this == MinecraftInstance.mc.player) {
-            RayCastEvent event = new RayCastEvent(RayCastEvent.RayCastType.BLOCK, new Rotation(this.rotationYaw, this.rotationPitch), blockReachDistance);
-            EventManager.call(event);
-
             Vec3 vec3 = this.getPositionEyes(partialTicks);
-            Vec3 vec31 = this.getLook(event.getRotation().getYaw(), event.getRotation().getPitch());
-            Vec3 vec32 = vec3.addVector(vec31.xCoord * event.getReach(), vec31.yCoord * event.getReach(), vec31.zCoord * event.getReach());
+            Vec3 vec31 = this.getLook(MinecraftInstance.mc.player.renderYawHead, MinecraftInstance.mc.player.renderPitchHead);
+            Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
             return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
         }
 

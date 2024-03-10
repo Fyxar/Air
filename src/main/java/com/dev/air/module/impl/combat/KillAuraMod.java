@@ -1,18 +1,11 @@
 package com.dev.air.module.impl.combat;
 
-import com.dev.air.event.impl.packet.update.PostMotionEvent;
-import com.dev.air.event.impl.packet.update.PreMotionEvent;
 import com.dev.air.event.impl.render.ItemRendererEvent;
-import com.dev.air.event.impl.render.RayCastEvent;
-import com.dev.air.event.impl.tick.movement.MoveInputEvent;
-import com.dev.air.event.impl.tick.movement.PlayerJumpEvent;
-import com.dev.air.event.impl.tick.movement.PlayerStrafeEvent;
 import com.dev.air.event.impl.update.PreUpdateEvent;
 import com.dev.air.module.api.Category;
 import com.dev.air.module.api.Module;
 import com.dev.air.module.api.annotation.ModuleInfo;
 import com.dev.air.rotation.RotationManager;
-import com.dev.air.util.player.MoveUtil;
 import com.dev.air.util.rotation.other.Rotation;
 import com.dev.air.util.math.MathUtil;
 import com.dev.air.util.other.Stopwatch;
@@ -24,15 +17,12 @@ import com.dev.air.value.impl.ModeValue;
 import com.dev.air.value.impl.NumberValue;
 import com.dev.air.value.impl.RangeValue;
 import net.lenni0451.asmevents.event.Target;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.util.MathHelper;
 import org.lwjglx.input.Keyboard;
 
 import java.util.Comparator;
