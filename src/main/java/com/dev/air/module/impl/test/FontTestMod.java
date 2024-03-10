@@ -14,8 +14,8 @@ public class FontTestMod extends Module {
     public void onRender2D(Render2DEvent event) {
         String testText = "ABCDEFGHIJKLMNOPQRSTUVWXYZ: Air";
         Fonts.robotoRegular18.drawString(testText, 5, 5, -1);
-        Fonts.smallPixel18.drawString(testText, 5, 50, -1);
-        Fonts.verdana18.drawString(testText, 5, 80, -1);
+        Fonts.sfUI18.drawString(testText, 5, 50, -1);
+        Fonts.productSans18.drawString(testText, 5, 80, -1);
     }
 
 }

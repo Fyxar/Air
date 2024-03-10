@@ -1,6 +1,7 @@
 package com.dev.air.module.api.manager;
 
 import com.dev.air.Client;
+import com.dev.air.font.impl.CustomFontRenderer;
 import com.dev.air.module.api.Category;
 import com.dev.air.module.api.Module;
 import com.dev.air.module.api.annotation.Development;
@@ -39,6 +40,7 @@ public class ModuleManager extends ArrayList<Module> {
         this.add(new AnimationsMod());
         this.add(new WatermarkMod());
         this.add(new TargetHUDMod());
+        this.add(new BPSMod());
 
         /* World */
         this.add(new ScaffoldMod());
@@ -79,16 +81,24 @@ public class ModuleManager extends ArrayList<Module> {
         return mods;
     }
 
-    public ArrayList<Module> sort() {
+    public ArrayList<Module> sort(CustomFontRenderer renderer) {
         ArrayList<Module> mods = new ArrayList<>();
 
         for (Module module : this) mods.add(module);
 
-        mods.sort((m2, m1) -> (int) (mc.fontRenderer.getStringWidth(m1.getPrefix().isEmpty() ?
-                m1.getName() : m1.getName() + " §7" + m1.getPrefix()) - mc.fontRenderer.getStringWidth(
-                m2.getPrefix().isEmpty() ?
-                        m2.getName() : m2.getName() + " §7" + m2.getPrefix()
-        )));
+        if (renderer == null) {
+            mods.sort((m2, m1) -> (int) (mc.fontRenderer.getStringWidth(m1.getPrefix().isEmpty() ?
+                    m1.getName() : m1.getName() + " §7" + m1.getPrefix()) - mc.fontRenderer.getStringWidth(
+                    m2.getPrefix().isEmpty() ?
+                            m2.getName() : m2.getName() + " §7" + m2.getPrefix()
+            )));
+        } else {
+            mods.sort((m2, m1) -> (int) (renderer.getStringWidth(m1.getPrefix().isEmpty() ?
+                    m1.getName() : m1.getName() + " §7" + m1.getPrefix()) - renderer.getStringWidth(
+                    m2.getPrefix().isEmpty() ?
+                            m2.getName() : m2.getName() + " §7" + m2.getPrefix()
+            )));
+        }
 
         return mods;
     }

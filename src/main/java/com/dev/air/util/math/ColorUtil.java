@@ -16,6 +16,19 @@ public class ColorUtil {
         return Color.getHSBColor(hue, saturation, brightness).getRGB();
     }
 
+    public static int getAstolfoWave(float speed, int yOffset, int yTotal, long index, float saturation, float brightness) {
+        float hue = (float) ((System.currentTimeMillis() + index) % (int)speed) + ((yTotal - yOffset) * 9);
+        while (hue > speed) {
+            hue -= speed;
+        }
+        hue /= speed;
+        if (hue > 0.5) {
+            hue = 0.5F - (hue - 0.5f);
+        }
+        hue += 0.5F;
+        return Color.HSBtoRGB(hue, 0.5f, 1F);
+    }
+
     public static int getColorWave(int speed, int offset, Color color) {
         return Color.getHSBColor(getHue(color), getSaturation(color), calculateBrightness(speed, offset)).getRGB();
     }

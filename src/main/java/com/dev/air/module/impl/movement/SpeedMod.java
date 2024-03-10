@@ -10,6 +10,7 @@ import com.dev.air.util.player.MoveUtil;
 import com.dev.air.value.impl.ModeValue;
 import com.dev.air.value.impl.NumberValue;
 import net.lenni0451.asmevents.event.Target;
+import net.minecraft.block.BlockAir;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
@@ -69,7 +70,7 @@ public class SpeedMod extends Module {
                         MoveUtil.strafe(MoveUtil.getSpeed(0.38));
                     }
 
-                    if (mc.player.offGroundTicks == 1) MoveUtil.strafe(MoveUtil.getSpeed(0.3));
+                    if (mc.player.offGroundTicks == 1) MoveUtil.strafe(MoveUtil.getSpeed(0.27));
 
                     break;
             }

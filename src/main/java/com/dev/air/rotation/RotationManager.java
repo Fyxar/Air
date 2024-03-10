@@ -19,10 +19,10 @@ public class RotationManager {
     
     private static Rotation prevRotation, rotation, targetRotation;
     private static boolean fixVelocity;
-    private static double turnSpeed;
+    private static float turnSpeed;
     private static int tickSinceLastSet, waitForTick;
     
-    public static void rotateTo(Rotation rotation, double turnSpeed, boolean fixVelocity) {
+    public static void rotateTo(Rotation rotation, float turnSpeed, boolean fixVelocity) {
         RotationManager.turnSpeed = turnSpeed;
         RotationManager.fixVelocity = fixVelocity;
         RotationManager.targetRotation = rotation;
@@ -111,13 +111,17 @@ public class RotationManager {
 
     private static Rotation getRotation(Rotation targetRotation) {
         Rotation cacheRotation = null;
-        if (turnSpeed < 1F) {
+        double turnSpeedYaw = turnSpeed, turnSpeedPitch = turnSpeed;
+        targetRotation.setYaw((float) (targetRotation.getYaw() + (Math.random() / 100.0D)));
+        if (turnSpeed < 180F) {
             double deltaYaw = MathHelper.wrapAngleTo180_float(targetRotation.getYaw() - prevRotation.getYaw());
             double deltaPitch = targetRotation.getPitch() - prevRotation.getPitch();
-            float smoothYaw = (float) (deltaYaw * turnSpeed);
-            float smoothPitch = (float) (deltaPitch * turnSpeed);
+            if (Math.abs(deltaYaw) < turnSpeedYaw) turnSpeedYaw = Math.abs(deltaYaw);
+            if (Math.abs(deltaPitch) < turnSpeedPitch) turnSpeedPitch = Math.abs(deltaPitch);
+            double newDeltaYaw = (deltaYaw / Math.abs(deltaYaw)) * turnSpeedYaw;
+            double newDeltaPitch = (deltaPitch / Math.abs(deltaPitch)) * turnSpeedPitch;
 
-            cacheRotation = new Rotation(prevRotation.getYaw() + smoothYaw, prevRotation.getPitch() + smoothPitch);
+            cacheRotation = new Rotation(prevRotation.getYaw() + (float) newDeltaYaw, prevRotation.getPitch() + (float) newDeltaPitch);
         } else {
             cacheRotation = targetRotation;
         }

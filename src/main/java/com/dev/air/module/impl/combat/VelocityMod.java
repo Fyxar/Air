@@ -6,6 +6,7 @@ import com.dev.air.module.api.Category;
 import com.dev.air.module.api.Module;
 import com.dev.air.module.api.annotation.ModuleInfo;
 import com.dev.air.util.packet.PacketUtil;
+import com.dev.air.value.impl.BooleanValue;
 import com.dev.air.value.impl.ModeValue;
 import com.dev.air.value.impl.NumberValue;
 import net.lenni0451.asmevents.event.Target;
@@ -24,6 +25,7 @@ public class VelocityMod extends Module {
     private ModeValue mode = new ModeValue("Mode", "Normal", "Normal", "Grim 1.17", "Skip Tick");
     private NumberValue horizontally = new NumberValue("Horizontally", 0, 1, 0, 100).requires(mode, "Normal");
     private NumberValue vertically = new NumberValue("Vertically", 0, 1, 0, 100).requires(mode, "Normal");
+    private BooleanValue damageOnly = new BooleanValue("Damage Only", true);
 
     private boolean canSpoof, canCancel;
     private int ticks;
@@ -70,10 +72,7 @@ public class VelocityMod extends Module {
         if (event.getPacket() instanceof S19PacketEntityStatus) {
             S19PacketEntityStatus wrapper = (S19PacketEntityStatus) event.getPacket();
 
-
-            if (wrapper.getOpCode() == 2 && wrapper.getEntity(mc.world) == mc.player && (
-                    mode.is("Grim 1.17") || mode.is("Skip Tick")
-                    )) {
+            if (wrapper.getOpCode() == 2 && wrapper.getEntity(mc.world) == mc.player) {
                 canCancel = true;
             }
         }
@@ -82,7 +81,8 @@ public class VelocityMod extends Module {
             S12PacketEntityVelocity wrapper = (S12PacketEntityVelocity) event.getPacket();
             if (wrapper.getEntityID() != mc.player.getEntityId()) return;
 
-            if (mode.is("Normal")) {
+            if (mode.is("Normal") && (!damageOnly.isEnabled() || canCancel)) {
+                if (horizontally.getInt() == 100 && vertically.getInt() == 100) return;
                 event.setCancelled(true);
                 if (horizontally.getInt() == 0 && vertically.getInt() == 0) return;
                 if (horizontally.getInt() == 0 && vertically.getInt() != 0) {
@@ -95,9 +95,11 @@ public class VelocityMod extends Module {
                     return;
                 }
 
-                mc.player.motionX = (wrapper.getMotionX() / 8000.0D) * (horizontally.getFloat() / 100.0F);
+                mc.player.motionX = (wrapper.getMotionX() / 8000.0D) * (horizontally.getFloat() / 100.0D);
                 mc.player.motionY = (wrapper.getMotionY() / 8000.0D) * (vertically.getFloat() / 100.0F);
-                mc.player.motionZ = (wrapper.getMotionZ() / 8000.0D) * (horizontally.getFloat() / 100.0F);
+                mc.player.motionZ = (wrapper.getMotionZ() / 8000.0D) * (horizontally.getFloat() / 100.0D);
+
+                canCancel = false;
             }
 
             if (mode.is("Grim 1.17") && canCancel) {

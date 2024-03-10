@@ -47,7 +47,7 @@ public class KillAuraMod extends Module {
     private final NumberValue hurtTime = new NumberValue("Hurt Time", 10, 1, 1, 10);
     private final ModeValue autoBlock = new ModeValue("Auto Block", "Off", "Off", "Fake");
     private final ModeValue rotationMode = new ModeValue("Rotation", "Smooth", "Normal", "Smooth");
-    private final RangeValue smoothValue = new RangeValue("Smooth Value", 0.4,  0.6, 0.1, 0.1, 1).requires(rotationMode, "Smooth");
+    private final RangeValue smoothValue = new RangeValue("Smooth Value", 180,  180, 1, 1, 180).requires(rotationMode, "Smooth");
     private final ModeValue randomization = new ModeValue("Randomise (rot)", "Simple", "None", "Simple", "Time");
     private final RangeValue randomiseValue = new RangeValue("Randomise Value", 0,  20, 1, 0, 30).requires(randomization,
             "Time");
@@ -175,9 +175,9 @@ public class KillAuraMod extends Module {
             }
         }
 
-        double turnSpeed = 1.0F;
+        float turnSpeed = 180F;
         if (rotationMode.is("Smooth")) {
-            turnSpeed = MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());;
+            turnSpeed = (float) MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());;
         }
 
         RotationManager.rotateTo(targetRotation, turnSpeed, fixVelocity.isEnabled());

@@ -46,7 +46,7 @@ public class ScaffoldMod extends Module {
     private final ModeValue eagle = new ModeValue("Eagle", "Off", "Off", "Sneak");
     private final ModeValue rotationMode = new ModeValue("Rotation Mode", "Smooth", "Normal", "Smooth", "1.17 Snap");
     private final ModeValue rotationType = new ModeValue("Rotation Type", "Center", "Center", "Simple");
-    private final RangeValue smoothValue = new RangeValue("Smooth Value", 0.4,  0.6, 0.1, 0.1, 1).requires(rotationMode, "Smooth");
+    private final RangeValue smoothValue = new RangeValue("Smooth Value", 180,  180, 1, 1, 180).requires(rotationMode, "Smooth");
     private final ModeValue randomization = new ModeValue("Randomise (rot)", "Simple", "None", "Simple");
     private final RangeValue randomiseValue = new RangeValue("Randomise Value", 0,  20, 1, 0, 30).requires(randomization,
             "Time");
@@ -113,12 +113,16 @@ public class ScaffoldMod extends Module {
             mc.gameSettings.keyBindSprint.setPressed(false);
         }
 
+        boolean isOnEdge = mc.world.getBlockState(new BlockPos(mc.player).down()).getBlock() instanceof BlockAir && mc.player.onGround;
         if (eagle.is("Sneak")) {
-            boolean isOnEdge = mc.world.getBlockState(new BlockPos(mc.player).down()).getBlock() instanceof BlockAir && mc.player.onGround;
             mc.gameSettings.keyBindSneak.setPressed(isOnEdge || GameSettings.isKeyDown(mc.gameSettings.keyBindSneak));
         } else {
             mc.gameSettings.keyBindSneak.setPressed(GameSettings.isKeyDown(mc.gameSettings.keyBindSneak));
         }
+    }
+
+    @Target
+    public void onMoveInput(MoveInputEvent event) {
     }
 
     @Target
@@ -211,15 +215,15 @@ public class ScaffoldMod extends Module {
             }
 
             if (randomization.is("Time")) {
-                double randomYaw = MathUtil.randomLast(randomiseValue.getFirst(), randomiseValue.getSecond(), System.currentTimeMillis() + (long) MathUtil.randomNormal(0, 100000)), randomPitch = MathUtil.randomLast(randomiseValue.getFirst(), randomiseValue.getSecond(), System.currentTimeMillis() + (long) MathUtil.randomNormal(0, 100000));
+                double randomYaw = MathUtil.randomLast(randomiseValue.getFirst(), randomiseValue.getSecond(), (long) MathUtil.randomNormal(1, 1000)), randomPitch = MathUtil.randomLast(randomiseValue.getFirst(), randomiseValue.getSecond(), (long) MathUtil.randomNormal(1, 1000));
                 targetRotation.setYaw(targetRotation.getYaw() + (float) randomYaw);
                 targetRotation.setPitch(targetRotation.getPitch() + (float) randomPitch);
             }
         }
 
-        double turnSpeed = 1.0F;
+        float turnSpeed = 180F;
         if (rotationMode.is("Smooth")) {
-            turnSpeed = MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());;
+            turnSpeed = (float) MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());;
         }
 
         RotationManager.rotateTo(targetRotation, turnSpeed, fixVelocity.isEnabled());
