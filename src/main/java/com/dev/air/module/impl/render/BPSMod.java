@@ -13,7 +13,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@ModuleInfo(name = "BPSDisplay", description = "Show your current blocks per second", category = Category.RENDER, autoEnable = true)
+@ModuleInfo(name = "BPS Display", description = "Show your current blocks per second", category = Category.RENDER, autoEnable = true)
 public class BPSMod extends Module {
 
     @Target

@@ -16,6 +16,11 @@ public class WatermarkMod extends Module {
 
     private final ModeValue mode = new ModeValue("Mode", "Minecraft", "Minecraft");
 
+    @Override
+    public String getPrefix() {
+        return mode.getMode();
+    }
+
     @Target
     public void onRender2D(Render2DEvent event) {
         switch (mode.getMode()) {

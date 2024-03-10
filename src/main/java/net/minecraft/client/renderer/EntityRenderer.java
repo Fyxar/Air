@@ -1594,6 +1594,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             this.renderCloudsCheck(renderglobal, partialTicks, pass);
         }
 
+        EventManager.call(new Render3DEvent());
         this.mc.mcProfiler.endStartSection("hand");
 
         boolean renderHand = true;
@@ -1613,8 +1614,6 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 
             this.renderWorldDirections(partialTicks);
         }
-
-        EventManager.call(new Render3DEvent());
 
         if (flag) {
             Shaders.endRender();

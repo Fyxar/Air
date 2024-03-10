@@ -34,7 +34,7 @@ public class ArraylistMod extends Module {
                     int renderX = resolution.getScaledWidth() - 5 - mc.fontRenderer.getStringWidth(display);
                     mc.fontRenderer.drawStringWithShadow(display, renderX, renderY, getColor(index, count));
                     index += 15;
-                    renderY += mc.fontRenderer.FONT_HEIGHT;
+                    renderY += mc.fontRenderer.FONT_HEIGHT + 1;
                     count += 1;
                 }
                 break;

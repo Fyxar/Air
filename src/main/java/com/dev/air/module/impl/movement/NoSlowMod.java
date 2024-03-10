@@ -17,7 +17,7 @@ import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.network.play.server.S09PacketHeldItemChange;
 
-@ModuleInfo(name = "NoSlow", description = "Prevent item slowdown", category = Category.MOVEMENT)
+@ModuleInfo(name = "No Slow", description = "Prevent item slowdown", category = Category.MOVEMENT)
 public class NoSlowMod extends Module {
 
      private final ModeValue mode = new ModeValue("Mode", "Ignore", "Ignore", "Custom", "Blink", "Spoof");

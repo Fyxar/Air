@@ -28,7 +28,7 @@ public enum Client {
 
     instance;
 
-    public static Color MAIN_COLOR = new Color(180, 210, 231);
+    public static Color MAIN_COLOR = new Color(28, 134, 201);
     public static Color ALT_COLOR = new Color(255, 255, 255);
     public final static String NAME = "Air", VERSION = "1.0", BRANCH = "Development";
     public final static boolean isDevelopment = BRANCH.toUpperCase().contains("DEV");

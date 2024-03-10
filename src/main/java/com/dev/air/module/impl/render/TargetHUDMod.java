@@ -21,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-@ModuleInfo(name = "TargetHUD", description = "Render info about the current target", category = Category.RENDER)
+@ModuleInfo(name = "Target HUD", description = "Render info about the current target", category = Category.RENDER)
 public class TargetHUDMod extends Module {
 
     private final ModeValue mode = new ModeValue("Mode", "Air", "Air");

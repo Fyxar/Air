@@ -29,7 +29,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 //TODO: Actually backtrack :)
-@ModuleInfo(name = "BackTrack", description = "Hit target last position", category = Category.COMBAT)
+@ModuleInfo(name = "Back Track", description = "Hit target last position", category = Category.COMBAT)
 public class BackTrackMod extends Module {
 
     @Override

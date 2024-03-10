@@ -157,9 +157,9 @@ public class ScaffoldMod extends Module {
     }
 
     private void placeBlock() {
-        if(blockData == null) return;
-        if(delayValue.getValue() != 0 && !stopwatch.hasReached(delayValue.getInt())) return;
-        if(!(mc.world.getBlockState(blockData.position.offset(blockData.direction)).getBlock() instanceof BlockAir)) return;
+        if (blockData == null) return;
+        if (delayValue.getValue() != 0 && !stopwatch.hasReached(delayValue.getInt())) return;
+        if (!(mc.world.getBlockState(blockData.position.offset(blockData.direction)).getBlock() instanceof BlockAir)) return;
         Vec3 hitVec = new Vec3(blockData.position.offset(blockData.direction)).addVector(0.5, 0.5, 0.5)
                 .add(blockData.direction.getOpposite().getDirectionVec().multiply(0.5));
         mc.playerController.onPlayerRightClick(mc.player, mc.world, mc.player.getHeldItem(), blockData.position, blockData.direction, hitVec);
@@ -226,6 +226,8 @@ public class ScaffoldMod extends Module {
             turnSpeed = (float) MathUtil.randomNormal(this.smoothValue.getFirst(), this.smoothValue.getSecond());;
         }
 
+//        if (rayCast.isEnabled() && mc.player.rayTraceCustom(3.0F, targetRotation.getYaw(), targetRotation.getPitch()).getBlockPos() !=
+//                blockData.position) return;
         RotationManager.rotateTo(targetRotation, turnSpeed, fixVelocity.isEnabled());
     }
 

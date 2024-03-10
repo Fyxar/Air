@@ -38,7 +38,7 @@ import org.lwjglx.input.Keyboard;
 import java.util.Comparator;
 
 /* the settings hurt my eyes */
-@ModuleInfo(name = "KillAura", description = "Attack targets for you", category = Category.COMBAT, key = Keyboard.KEY_R)
+@ModuleInfo(name = "Kill Aura", description = "Attack targets for you", category = Category.COMBAT, key = Keyboard.KEY_R)
 public class KillAuraMod extends Module {
 
     private final ModeValue targetMode = new ModeValue("Target", "Single", "Single");
