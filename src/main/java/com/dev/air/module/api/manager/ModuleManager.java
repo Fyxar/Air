@@ -49,6 +49,7 @@ public class ModuleManager extends ArrayList<Module> {
         this.add(new DisablerMod());
         this.add(new FastUseMod());
         this.add(new RegenMod());
+        this.add(new BlinkMod());
 
         /* Testing */
         this.add(new TestMod());
