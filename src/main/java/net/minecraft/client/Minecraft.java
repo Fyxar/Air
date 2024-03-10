@@ -3,6 +3,7 @@ package net.minecraft.client;
 import com.dev.air.Client;
 import com.dev.air.event.impl.other.KeyInputEvent;
 import com.dev.air.event.impl.other.ScreenScaleUpdate;
+import com.dev.air.event.impl.tick.PreTickEvent;
 import com.dev.air.event.impl.tick.TimerUpdateEvent;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -1470,6 +1471,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         }
 
         this.mcProfiler.endSection();
+        EventManager.call(new PreTickEvent());
         this.entityRenderer.getMouseOver(1.0F);
         this.mcProfiler.startSection("gameMode");
 

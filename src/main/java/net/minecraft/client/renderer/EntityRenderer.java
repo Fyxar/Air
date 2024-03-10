@@ -1,8 +1,6 @@
 package net.minecraft.client.renderer;
 
-import com.dev.air.event.impl.render.RayCastEvent;
 import com.dev.air.event.impl.render.Render3DEvent;
-import com.dev.air.util.rotation.other.Rotation;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.gson.JsonSyntaxException;
@@ -427,32 +425,35 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         Entity entity = this.mc.getRenderViewEntity();
 
         if (entity != null && this.mc.world != null) {
-            RayCastEvent event = new RayCastEvent(RayCastEvent.RayCastType.ENTITY, new Rotation(entity.rotationYaw, entity.rotationPitch), mc.playerController.getBlockReachDistance());
-            if (entity == mc.player) EventManager.call(event);
-
             this.mc.mcProfiler.startSection("pick");
             this.mc.pointedEntity = null;
-            double d0 = event.getReach();
+            double d0 = this.mc.playerController.getBlockReachDistance();
             this.mc.objectMouseOver = entity.rayTrace(d0, partialTicks);
             double d1 = d0;
             Vec3 vec3 = entity.getPositionEyes(partialTicks);
             boolean flag = false;
             int i = 3;
 
+            if (this.mc.playerController.extendedReach()) {
+                d0 = 6.0D;
+                d1 = 6.0D;
+            } else if (d0 > 3.0D) {
+                flag = true;
+            }
+
             if (this.mc.objectMouseOver != null) {
                 d1 = this.mc.objectMouseOver.hitVec.distanceTo(vec3);
             }
 
-            Vec3 vec31 = entity.getLook(event.getRotation().getYaw(), event.getRotation().getPitch());
+            Vec3 vec31 = entity.getLook(mc.player.renderYawHead, mc.player.renderPitchHead);
             Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
             /**
              * Pointed entity
              */
             Entity pointedEntity = null;
             Vec3 vec33 = null;
-            float f = 1;
-            List<Entity> list = this.mc.world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(
-                    vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand(f, f, f), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>() {
+            float f = 1.0F;
+            List<Entity> list = this.mc.world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand(f, f, f), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>() {
                 public boolean apply(Entity p_apply_1_) {
                     return p_apply_1_.canBeCollidedWith();
                 }
