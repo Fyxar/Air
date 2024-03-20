@@ -1,3 +1,4 @@
+# DISCONTINUED, I'M TOO LAZY LOL
 # Air - Minecraft Hacked Client ✨
 
 Air is a lightweight utility client for Minecraft, a free client that you can also contribute to. Aimed to bypass most anticheat in the community.
